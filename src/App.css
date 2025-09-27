@@ -1,4 +1,3 @@
-/* General Body & Root Styling */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: #121212; /* A deeper, darker background */
@@ -10,11 +9,9 @@ body {
   align-items: flex-start; /* Aligns content to the top */
   min-height: 100vh;
 }
-
 /* App container */
 .App {
   width: 100%;
-  max-width: 1400px;
   padding: 2rem;
   box-sizing: border-box;
 }
@@ -30,26 +27,22 @@ body {
   margin: 8rem auto; /* Centers it vertically with more spacing */
   text-align: center;
 }
-
 h2 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
   color: #00bcd4; /* A vibrant cyan color */
   font-weight: 500;
 }
-
 .form-group {
   margin-bottom: 1.5rem;
   text-align: left;
 }
-
 label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
   color: #bdbdbd;
 }
-
 input[type="text"],
 input[type="password"] {
   width: 100%;
@@ -62,12 +55,10 @@ input[type="password"] {
   transition: border-color 0.3s ease;
   box-sizing: border-box;
 }
-
 input:focus {
   outline: none;
   border-color: #00bcd4;
 }
-
 button[type="submit"] {
   width: 100%;
   padding: 0.75rem;
@@ -80,22 +71,18 @@ button[type="submit"] {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 button[type="submit"]:hover {
   background-color: #0097a7;
 }
-
 .message {
   margin-top: 1.5rem;
   font-size: 1rem;
   color: #00bcd4;
 }
-
 /* Anime Tracker & Menu Styling */
 .anime-tracker-container {
   padding: 1rem;
 }
-
 .menu-bar {
   display: flex;
   justify-content: center;
@@ -296,10 +283,7 @@ button[type="submit"]:hover {
 .add-button:hover {
   background-color: #43a047;
 }
-/* src/App.css */
-/* Add this at the very top of your file */
 
-/* Dark Mode (default) */
 body, .App.dark {
   background-color: #121212;
   color: #e0e0e0;
@@ -387,8 +371,6 @@ body, .App.dark {
   color: #1a1a1a;
   border: 1px solid #ccc;
 }
-/* src/App.css */
-
 /* Profile Page & Logout Button */
 .profile-container {
   width: 100%;
@@ -465,8 +447,7 @@ body, .App.dark {
   background-color: #007bff;
   color: white;
 }
-/* src/App.css */
-/* Add this to the end of your file */
+/* clubd*/
 .clubs-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -604,7 +585,6 @@ body, .App.dark {
   padding: 10px;
   border-radius: 5px;
 }
-
 .vote-button {
   background: none;
   border: 1px solid #61dafb;
@@ -615,19 +595,14 @@ body, .App.dark {
   font-weight: bold;
   transition: all 0.3s;
 }
-
 .vote-button.voted {
   background-color: #61dafb;
   color: #1a1a1a;
 }
-
 .vote-count {
   font-weight: bold;
   color: #e0e0e0;
 }
-/* src/App.css */
-/* Add this to the end of your file */
-
 /* Anime Detail Page */
 .anime-detail-container {
   max-width: 1000px;
@@ -637,56 +612,46 @@ body, .App.dark {
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
-
 .anime-header {
   display: flex;
   gap: 30px;
   align-items: flex-start;
   margin-bottom: 2rem;
 }
-
 .anime-detail-image {
   width: 300px;
   border-radius: 10px;
 }
-
 .anime-info {
   flex: 1;
 }
-
 .anime-info h2 {
   font-size: 2.5em;
   color: #00bcd4;
   margin-top: 0;
 }
-
 .anime-info p {
   line-height: 1.6;
 }
-
 /* Reviews Section */
 .reviews-section {
   margin-top: 3rem;
 }
-
 .reviews-section h3 {
   color: #00bcd4;
   font-size: 2em;
   margin-bottom: 1.5rem;
 }
-
 .review-form-container {
   background-color: #242424;
   padding: 2rem;
   border-radius: 10px;
   margin-bottom: 2rem;
 }
-
 .review-form-container h4 {
   color: #61dafb;
   margin-top: 0;
 }
-
 .review-form-container textarea {
   width: 100%;
   height: 100px;
@@ -697,19 +662,16 @@ body, .App.dark {
   border-radius: 5px;
   resize: vertical;
 }
-
 .review-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
 .review-card {
   background-color: #242424;
   padding: 1.5rem;
   border-radius: 8px;
 }
-
 .review-card p {
   margin: 0;
 }
@@ -719,24 +681,20 @@ body, .App.dark {
   padding-top: 1rem;
   border-top: 1px solid #333;
 }
-
 .App.light .streaming-links {
   border-color: #ccc;
 }
-
 .streaming-links h3 {
   font-size: 1.5em;
   margin-top: 0;
   margin-bottom: 1rem;
   color: #00bcd4;
 }
-
 .streaming-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
-
 .streaming-link {
   display: inline-block;
   background-color: #00bcd4;
@@ -747,16 +705,13 @@ body, .App.dark {
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
-
 .streaming-link:hover {
   background-color: #0097a7;
 }
-
 .App.light .streaming-link {
   background-color: #007bff;
   color: #fff;
 }
-
 .App.light .streaming-link:hover {
   background-color: #0056b3;
 }
@@ -764,7 +719,6 @@ body, .App.dark {
 .synopsis-container {
   margin-top: 2rem;
 }
-
 .spoiler-toggle button {
   background-color: #f44336;
   color: white;
@@ -774,19 +728,15 @@ body, .App.dark {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .spoiler-toggle button:hover {
   background-color: #d32f2f;
 }
-
 .App.light .spoiler-toggle button {
   background-color: #ff5252;
 }
-
 .App.light .spoiler-toggle button:hover {
   background-color: #e53935;
 }
-
 .spoiler-placeholder {
   font-style: italic;
   color: #888;
@@ -800,17 +750,14 @@ body, .App.dark {
   margin-bottom: 2rem;
   gap: 15px;
 }
-
 .filter-group {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .filter-bar-container label {
   font-weight: bold;
 }
-
 .filter-bar-container select {
   padding: 8px 12px;
   border-radius: 5px;
@@ -818,7 +765,6 @@ body, .App.dark {
   color: #e0e0e0;
   border: 1px solid #444;
 }
-
 .App.light .filter-bar-container select {
   background-color: #fff;
   color: #1a1a1a;
@@ -828,12 +774,10 @@ body, .App.dark {
 .reminder-section {
   margin-top: 2rem;
 }
-
 .subscribed-message {
   font-weight: bold;
   color: #4CAF50;
 }
-
 .subscribe-button {
   background-color: #00bcd4;
   color: #1a1a1a;
@@ -844,16 +788,13 @@ body, .App.dark {
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
-
 .subscribe-button:hover {
   background-color: #0097a7;
 }
-
 .App.light .subscribe-button {
   background-color: #007bff;
   color: white;
 }
-
 .App.light .subscribe-button:hover {
   background-color: #0056b3;
 }
@@ -863,19 +804,16 @@ body, .App.dark {
   margin: 2rem auto;
   text-align: center;
 }
-
 .dashboard-container h2 {
   font-size: 2.5em;
   color: #00bcd4;
   margin-bottom: 2rem;
 }
-
 .analytics-grid {
   display: flex;
   justify-content: center;
   gap: 20px;
 }
-
 .analytics-card {
   background-color: #1e1e1e;
   padding: 2rem;
@@ -883,19 +821,16 @@ body, .App.dark {
   flex: 1;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
-
 .analytics-card h3 {
   color: #61dafb;
   margin-top: 0;
 }
-
 .big-number {
   font-size: 3em;
   font-weight: bold;
   color: #e0e0e0;
   margin: 0;
 }
-
 .unit {
   font-size: 1em;
   color: #aaa;
@@ -907,32 +842,27 @@ body, .App.dark {
   margin: 2rem auto;
   padding: 2rem;
 }
-
 .admin-panel-container h2 {
   text-align: center;
   margin-bottom: 2rem;
   color: #00bcd4;
 }
-
 .admin-section {
   background-color: #1e1e1e;
   padding: 2rem;
   border-radius: 10px;
   margin-bottom: 2rem;
 }
-
 .admin-section h3 {
   color: #61dafb;
   margin-top: 0;
   margin-bottom: 1.5rem;
 }
-
 .admin-list {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-
 .admin-card {
   background-color: #242424;
   padding: 1rem;
@@ -941,11 +871,9 @@ body, .App.dark {
   justify-content: space-between;
   align-items: center;
 }
-
 .admin-card p {
   margin: 0;
 }
-
 .admin-card button {
   background-color: #f44336;
   color: white;
@@ -953,4 +881,24 @@ body, .App.dark {
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
+}
+/* src/App.css */
+/* Add this to the end of the file */
+.popular-anime-section {
+  margin-bottom: 2rem;
+}
+.popular-anime-section h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2em;
+  color: #61dafb;
+}
+.popular-anime-section hr {
+  border: 0;
+  height: 1px;
+  background-color: #333;
+  margin-top: 2rem;
+}
+.App.light .popular-anime-section hr {
+  background-color: #ccc;
 }

@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 
-
 function AnimeDetail() {
   const { animeId } = useParams();
   const location = useLocation();
   const { userId, username } = location.state || {};
-
+  
   const [anime, setAnime] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [streamingLinks, setStreamingLinks] = useState([]);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [newRating, setNewRating] = useState(1);
   const [newReviewText, setNewReviewText] = useState('');
   const [reviewMessage, setReviewMessage] = useState('');
-
-  const [showSpoiler, setShowSpoiler] = useState(false); // New state for spoiler protection
-  const [isSubscribed, setIsSubscribed] = useState(false); // New state to track subscription status
   const [reminderMessage, setReminderMessage] = useState('');
-
-  // Fetch anime details and reviews on component load
+  const [showSpoiler, setShowSpoiler] = useState(false);
+  
   useEffect(() => {
     const fetchAnimeData = async () => {
       try {
@@ -36,6 +33,14 @@ function AnimeDetail() {
         if (!reviewsResponse.ok) {
           throw new Error('Failed to fetch reviews.');
         }
+        
+        if (userId) {
+          const remindersResponse = await fetch(`http://localhost:3001/api/reminders/${userId}`);
+          const remindersData = await remindersResponse.json();
+          if (remindersResponse.ok && remindersData.subscribedAnimeIds.includes(parseInt(animeId))) {
+            setIsSubscribed(true);
+          }
+        }
 
         setAnime(animeData.data);
         setReviews(reviewsData.reviews);
@@ -47,37 +52,9 @@ function AnimeDetail() {
       } finally {
         setIsLoading(false);
       }
-      const remindersResponse = await fetch(`http://localhost:3001/api/reminders/${userId}`);
-      const remindersData = await remindersResponse.json();
-
-      if (remindersResponse.ok && remindersData.subscribedAnimeIds.includes(parseInt(animeId))) {
-        setIsSubscribed(true);
-      }
-      const handleSubscribe = async () => {
-        try {
-          const response = await fetch('http://localhost:3001/api/reminders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId,
-              animeId: parseInt(animeId),
-              currentEpisodes: anime.episodes || 0
-            })
-          });
-          const data = await response.json();
-          if (response.ok) {
-            setReminderMessage(data.message);
-            setIsSubscribed(true);
-          } else {
-            setReminderMessage(data.message || 'Failed to subscribe to reminders.');
-          }
-        } catch (err) {
-          setReminderMessage('Could not connect to the server.');
-        }
-      };
     };
     fetchAnimeData();
-  }, [animeId]);
+  }, [animeId, userId]);
 
   const handleReviewSubmit = async (event) => {
     event.preventDefault();
@@ -85,7 +62,7 @@ function AnimeDetail() {
       setReviewMessage('You must be logged in to submit a review.');
       return;
     }
-
+    
     try {
       const response = await fetch('http://localhost:3001/api/reviews', {
         method: 'POST',
@@ -115,12 +92,39 @@ function AnimeDetail() {
     }
   };
 
+  const handleSubscribe = async () => {
+    try {
+        const response = await fetch('http://localhost:3001/api/reminders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userId, 
+                animeId: parseInt(animeId), 
+                currentEpisodes: anime.episodes || 0 
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            setReminderMessage(data.message);
+            setIsSubscribed(true);
+        } else {
+            setReminderMessage(data.message || 'Failed to subscribe to reminders.');
+        }
+    } catch (err) {
+        setReminderMessage('Could not connect to the server.');
+    }
+  };
+
   if (isLoading) {
     return <div className="loading-message">Loading anime details...</div>;
   }
 
   if (error) {
     return <div className="error-message">{error}</div>;
+  }
+
+  if (!anime) {
+    return <div className="error-message">Anime not found.</div>;
   }
 
   return (
@@ -133,7 +137,7 @@ function AnimeDetail() {
           <p><strong>Episodes:</strong> {anime.episodes || 'N/A'}</p>
           <p><strong>Status:</strong> {anime.status}</p>
           <p><strong>Score:</strong> {anime.score || 'N/A'}</p>
-
+          
           <div className="synopsis-container">
             <div className="spoiler-toggle">
               <button onClick={() => setShowSpoiler(!showSpoiler)}>
@@ -146,7 +150,7 @@ function AnimeDetail() {
               <p className="spoiler-placeholder">Synopsis is hidden to prevent spoilers.</p>
             )}
           </div>
-
+          
           <div className="streaming-links">
             <h3>Watch Now</h3>
             {streamingLinks.length > 0 ? (
@@ -161,6 +165,7 @@ function AnimeDetail() {
               <p>No official streaming links available.</p>
             )}
           </div>
+
           <div className="reminder-section">
             {isSubscribed ? (
               <p className="subscribed-message">You are subscribed to reminders for this anime. ✅</p>
@@ -171,6 +176,7 @@ function AnimeDetail() {
             )}
             {reminderMessage && <p className="reminder-message">{reminderMessage}</p>}
           </div>
+
         </div>
       </div>
 

@@ -19,28 +19,24 @@ function ClubPage() {
 
   const fetchClubData = async () => {
     try {
-      // Fetch club details
       const clubResponse = await fetch(`http://localhost:3001/api/clubs/${clubId}`);
       const clubData = await clubResponse.json();
       if (!clubResponse.ok) {
         throw new Error(clubData.message || 'Failed to fetch club.');
       }
 
-      // Fetch discussions for the club
       const discussionsResponse = await fetch(`http://localhost:3001/api/discussions/${clubId}`);
       const discussionsData = await discussionsResponse.json();
       if (!discussionsResponse.ok) {
         throw new Error(discussionsData.message || 'Failed to fetch discussions.');
       }
 
-      // Fetch polls for the club
       const pollsResponse = await fetch(`http://localhost:3001/api/polls/${clubId}`);
       const pollsData = await pollsResponse.json();
       if (!pollsResponse.ok) {
         throw new Error(pollsData.message || 'Failed to fetch polls.');
       }
       
-      // Fetch user's votes
       const votesResponse = await fetch(`http://localhost:3001/api/votes/${userId}`);
       const votesData = await votesResponse.json();
       if (votesResponse.ok) {

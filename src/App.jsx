@@ -8,7 +8,7 @@ import ThemeToggle from './components/ThemeToggle';
 import Clubs from './components/clubs';
 import ClubPage from './components/ClubPage'
 import AnimeDetail from './components/AnimeDetail';
-import SharedWatchlist from './components/ShareWatchlist'; // New component
+import SharedWatchlist from './components/ShareWatchlist';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import AdminPanel from './components/AdminPanel';
 

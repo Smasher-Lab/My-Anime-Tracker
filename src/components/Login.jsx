@@ -19,7 +19,7 @@ function Login() {
     }
 
     const endpoint = isLogin ? '/api/login' : '/api/register';
-
+    
     try {
       const response = await fetch(`http://localhost:3001${endpoint}`, {
         method: 'POST',
@@ -35,12 +35,12 @@ function Login() {
         setMessage(data.message);
         if (isLogin) {
           setTimeout(() => {
-            navigate('/tracker', { 
-              state: { 
-                userId: data.user_id, 
-                username: username, 
-                isAdmin: data.is_admin 
-              } 
+            navigate('/tracker', {
+              state: {
+                userId: data.user_id,
+                username: username,
+                isAdmin: data.is_admin
+              }
             });
           }, 1500);
         } else {
@@ -64,12 +64,7 @@ function Login() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>

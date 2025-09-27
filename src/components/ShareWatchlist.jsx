@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
-function ShareWatchlist() {
-  const location = useLocation();
-  const { userId } = location.state || {};
+function ShareWatchlist({ userId }) {
   const [shareableLink, setShareableLink] = useState('');
   
   const handleGenerateLink = () => {

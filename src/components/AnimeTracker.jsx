@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import FilterBar from './FilterBar';
-import ShareWatchlist from './ShareWatchlist'; // New import
-
-const { userId, username, isAdmin } = location.state || {}; // Get the new isAdmin status
-// ...
+import ShareWatchlist from './ShareWatchlist';
 
 const menuCategories = [
   'All',
@@ -18,9 +15,7 @@ const menuCategories = [
 function AnimeTracker() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { userId, username } = location.state || {};
-  const [showShareModal, setShowShareModal] = useState(false); // New state for the share modal
-
+  const { userId, username, isAdmin } = location.state || {};
 
   useEffect(() => {
     if (!userId) {
@@ -30,12 +25,14 @@ function AnimeTracker() {
 
   const [activeCategory, setActiveCategory] = useState('All');
   const [animeData, setAnimeData] = useState([]);
+  const [popularAnime, setPopularAnime] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedGenreId, setSelectedGenreId] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false); // Fix: Initial state is false
 
   useEffect(() => {
     const fetchSavedAnime = async () => {
@@ -53,8 +50,21 @@ function AnimeTracker() {
         setIsLoading(false);
       }
     };
+    const fetchPopularAnime = async () => {
+      try {
+        const response = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity&limit=12');
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch popular anime.');
+        }
+        setPopularAnime(data.data);
+      } catch (err) {
+        console.error("Fetching popular anime error:", err);
+      }
+    };
     if (userId) {
       fetchSavedAnime();
+      fetchPopularAnime();
     }
   }, [userId]);
 
@@ -163,14 +173,14 @@ function AnimeTracker() {
         <p>Welcome, <strong>{username}</strong>!</p>
         {isAdmin && (
           <button
-            onClick={() => navigate('/admin-panel', { state: { userId, username } })}
+            onClick={() => navigate('/admin-panel', { state: { userId, username, isAdmin } })}
             className="admin-panel-link-button"
           >
             Admin Panel
           </button>
         )}
         <button
-          onClick={() => navigate('/dashboard', { state: { userId, username } })}
+          onClick={() => navigate('/dashboard', { state: { userId, username, isAdmin } })}
           className="dashboard-link-button"
         >
           Analytics
@@ -182,31 +192,24 @@ function AnimeTracker() {
           Share Watchlist
         </button>
         <button
-          onClick={() => setShowShareModal(true)}
-          className="share-link-button" // New button
-        >
-          Share Watchlist
-        </button>
-        <button
-          onClick={() => navigate('/clubs', { state: { userId, username } })}
+          onClick={() => navigate('/clubs', { state: { userId, username, isAdmin } })}
           className="clubs-link-button"
         >
           Community Clubs
         </button>
         <button
-          onClick={() => navigate('/profile', { state: { username } })}
+          onClick={() => navigate('/profile', { state: { username, isAdmin } })}
           className="profile-link-button"
         >
           My Profile
         </button>
       </div>
 
-      {/* Share Watchlist Modal */}
       {showShareModal && (
         <div className="share-modal-backdrop">
           <div className="share-modal-content">
             <button onClick={() => setShowShareModal(false)} className="close-modal-button">&times;</button>
-            <ShareWatchlist />
+            <ShareWatchlist userId={userId} />
           </div>
         </div>
       )}
@@ -222,18 +225,16 @@ function AnimeTracker() {
         <button onClick={handleSearch} className="search-button">Search</button>
       </div>
 
-      <FilterBar onFilterChange={handleFilterChange} />
-
       {isSearching && <div className="loading-message">Searching for anime...</div>}
       {!isSearching && searchResults.length > 0 && (
         <div className="search-results-list">
           <h3>Search Results</h3>
           <div className="anime-list">
             {searchResults.map(anime => (
-              <Link
-                to={`/anime/${anime.mal_id}`}
-                key={anime.mal_id}
-                state={{ userId, username }}
+              <Link 
+                to={`/anime/${anime.mal_id}`} 
+                key={anime.mal_id} 
+                state={{ userId, username, isAdmin }}
                 className="anime-card-link"
               >
                 <div className="anime-card">
@@ -251,6 +252,34 @@ function AnimeTracker() {
         </div>
       )}
 
+      {!isSearching && searchResults.length === 0 && popularAnime.length > 0 && (
+        <div className="popular-anime-section">
+          <h3>Popular Anime</h3>
+          <div className="anime-list">
+            {popularAnime.map(anime => (
+              <Link 
+                to={`/anime/${anime.mal_id}`} 
+                key={anime.mal_id} 
+                state={{ userId, username, isAdmin }}
+                className="anime-card-link"
+              >
+                <div className="anime-card">
+                  <img src={anime.images.jpg.image_url} alt={anime.title} className="anime-image" />
+                  <div className="anime-card-content">
+                    <h3>{anime.title}</h3>
+                    <p>Episodes: {anime.episodes || 'N/A'}</p>
+                    <p>Score: {anime.score || 'N/A'}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <hr />
+        </div>
+      )}
+
+      <FilterBar onFilterChange={handleFilterChange} />
+
       <div className="menu-bar">
         {menuCategories.map((category) => (
           <button
@@ -267,10 +296,10 @@ function AnimeTracker() {
         <div className="anime-list">
           {filteredAnime.length > 0 ? (
             filteredAnime.map(anime => (
-              <Link
-                to={`/anime/${anime.id}`}
-                key={anime.id}
-                state={{ userId, username }}
+              <Link 
+                to={`/anime/${anime.id}`} 
+                key={anime.id} 
+                state={{ userId, username, isAdmin }}
                 className="anime-card-link"
               >
                 <div className="anime-card">

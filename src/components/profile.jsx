@@ -15,7 +15,7 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <h2>User Profile</h2>
+      <h2>Profile</h2>
       {username ? (
         <>
           <p className="profile-greeting">Hello, <strong>{username}</strong>!</p>
