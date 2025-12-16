@@ -22,6 +22,7 @@ function Clubs() {
         throw new Error(data.message || 'Failed to fetch clubs.');
       }
 
+      
       setClubs(data.clubs);
     } catch (err) {
       console.error("Fetch clubs error:", err);

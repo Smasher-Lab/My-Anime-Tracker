@@ -2,8 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import FilterBar from './FilterBar';
 import ShareWatchlist from './ShareWatchlist';
+import Sidebar from './Sidebar';
 
-const menuCategories = [
+
+
+function AnimeTracker() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { userId, username, isAdmin } = location.state || {};
+
+  const menuCategories = [
   'All',
   'Watching',
   'Completed',
@@ -11,11 +19,6 @@ const menuCategories = [
   'Dropped',
   'Plan to Watch',
 ];
-
-function AnimeTracker() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { userId, username, isAdmin } = location.state || {};
 
   useEffect(() => {
     if (!userId) {
@@ -179,31 +182,14 @@ function AnimeTracker() {
             Admin Panel
           </button>
         )}
-        <button
-          onClick={() => navigate('/dashboard', { state: { userId, username, isAdmin } })}
-          className="dashboard-link-button"
-        >
-          Analytics
-        </button>
-        <button
-          onClick={() => setShowShareModal(true)}
-          className="share-link-button"
-        >
-          Share Watchlist
-        </button>
-        <button
-          onClick={() => navigate('/clubs', { state: { userId, username, isAdmin } })}
-          className="clubs-link-button"
-        >
-          Community Clubs
-        </button>
-        <button
-          onClick={() => navigate('/profile', { state: { username, isAdmin } })}
-          className="profile-link-button"
-        >
-          My Profile
-        </button>
       </div>
+      {/* Sidebar */}
+      <Sidebar
+        userId={userId}
+        username={username}
+        isAdmin={isAdmin}
+        setShowShareModal={setShowShareModal}
+      />
 
       {showShareModal && (
         <div className="share-modal-backdrop">
@@ -231,9 +217,9 @@ function AnimeTracker() {
           <h3>Search Results</h3>
           <div className="anime-list">
             {searchResults.map(anime => (
-              <Link 
-                to={`/anime/${anime.mal_id}`} 
-                key={anime.mal_id} 
+              <Link
+                to={`/anime/${anime.mal_id}`}
+                key={anime.mal_id}
                 state={{ userId, username, isAdmin }}
                 className="anime-card-link"
               >
@@ -257,9 +243,9 @@ function AnimeTracker() {
           <h3>Popular Anime</h3>
           <div className="anime-list">
             {popularAnime.map(anime => (
-              <Link 
-                to={`/anime/${anime.mal_id}`} 
-                key={anime.mal_id} 
+              <Link
+                to={`/anime/${anime.mal_id}`}
+                key={anime.mal_id}
                 state={{ userId, username, isAdmin }}
                 className="anime-card-link"
               >
@@ -296,9 +282,9 @@ function AnimeTracker() {
         <div className="anime-list">
           {filteredAnime.length > 0 ? (
             filteredAnime.map(anime => (
-              <Link 
-                to={`/anime/${anime.id}`} 
-                key={anime.id} 
+              <Link
+                to={`/anime/${anime.id}`}
+                key={anime.id}
                 state={{ userId, username, isAdmin }}
                 className="anime-card-link"
               >

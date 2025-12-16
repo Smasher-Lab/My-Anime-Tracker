@@ -1,14 +1,48 @@
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
+const { Pool } = require('pg'); // fine if you're using it elsewhere
 const bcrypt = require('bcrypt');
+const OpenAI = require('openai');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // ✅ fixed here
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Chat route
+app.post("/api/chat", async (req, res) => {
+  console.log("Incoming body:", req.body); // 👈 debug log
+
+  const { message } = req.body;
+
+  if (!message) {
+    return res.status(400).json({ error: "Message is required" });
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: "You are a helpful assistant for an anime tracker website. Respond to user queries about the website, anime, or general topics in a friendly manner." },
+        { role: "user", content: message }
+      ],
+    });
+
+    const aiResponse = completion.choices[0].message.content;
+    res.status(200).json({ reply: aiResponse });
+  } catch (err) {
+    console.error("OpenAI API error:", err);
+    res.status(500).json({ message: "Server error. Could not connect to the AI service." });
+  }
+});
+
 
 // PostgreSQL Connection Pool
 const pool = new Pool({
@@ -291,7 +325,6 @@ app.post('/api/clubs', async (req, res) => {
     res.status(500).json({ message: 'Server error. Could not create club.' });
   }
 });
-
 // Endpoint to get a single club by its ID
 app.get('/api/clubs/:id', async (req, res) => {
   const { id } = req.params;
@@ -348,22 +381,22 @@ app.get('/api/polls/:clubId', async (req, res) => {
   const { clubId } = req.params;
   try {
     const client = await pool.connect();
-    
+
     const pollsQuery = 'SELECT * FROM polls WHERE club_id = $1 ORDER BY created_at DESC';
     const pollsResult = await client.query(pollsQuery, [clubId]);
 
     const polls = await Promise.all(pollsResult.rows.map(async (poll) => {
       const optionsQuery = 'SELECT * FROM poll_options WHERE poll_id = $1';
       const optionsResult = await client.query(optionsQuery, [poll.id]);
-      
+
       const votesQuery = 'SELECT option_id, COUNT(*) AS votes FROM votes WHERE poll_id = $1 GROUP BY option_id';
       const votesResult = await client.query(votesQuery, [poll.id]);
-      
+
       const optionsWithVotes = optionsResult.rows.map(option => {
         const vote = votesResult.rows.find(v => v.option_id === option.id);
         return { ...option, votes: vote ? parseInt(vote.votes) : 0 };
       });
-      
+
       return { ...poll, options: optionsWithVotes };
     }));
 
@@ -375,12 +408,11 @@ app.get('/api/polls/:clubId', async (req, res) => {
   }
 });
 
-// Endpoint to submit a vote
 app.post('/api/votes', async (req, res) => {
   const { poll_id, user_id, option_id } = req.body;
   try {
     const client = await pool.connect();
-    
+
     const checkQuery = 'SELECT * FROM votes WHERE poll_id = $1 AND user_id = $2';
     const checkResult = await client.query(checkQuery, [poll_id, user_id]);
 
@@ -391,7 +423,7 @@ app.post('/api/votes', async (req, res) => {
 
     const voteQuery = 'INSERT INTO votes (poll_id, user_id, option_id) VALUES ($1, $2, $3)';
     await client.query(voteQuery, [poll_id, user_id, option_id]);
-    
+
     client.release();
     res.status(201).json({ message: 'Vote submitted successfully!' });
 
@@ -552,6 +584,8 @@ app.get('/api/votes/:userId', async (req, res) => {
     res.status(500).json({ message: 'Server error. Could not fetch votes.' });
   }
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
